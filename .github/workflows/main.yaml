@@ -1,5 +1,7 @@
 name: Spring Boot CI/CD Pipeline
 on: push
+permissions:
+  packages: write
 jobs:
     springboot-workflow:
         runs-on: ubuntu-latest
@@ -16,7 +18,18 @@ jobs:
               working-directory: ./webapp
 
             - name: Build Docker Image
-              run: docker build -t springboot-webapp:webapp-latest ./webapp
+              run: |
+                docker build -t springboot-webapp:webapp-latest ./webapp
+                docker tag springboot-webapp:webapp-latest ghcr.io/${{ github.actor }}/springboot-webapp:webapp-latest
+#tag: source & target, despues la notacion del registrty                
+
+            - env: 
+                CR_PAT: ${{ secrets.CR_PAT }}
+              name: Log in to GitHub Container Registry
+              run: echo $CR_PAT | docker login ghcr.io -u USERNAME --password-stdin  
 
             - name: List Docker Images
               run: docker images
+
+            - name: Push Docker Image to GitHub Container Registry
+              run: docker push ghcr.io/${{ github.actor }}/springboot-webapp:webapp-latest
