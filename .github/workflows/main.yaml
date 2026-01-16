@@ -10,7 +10,7 @@ jobs:
             - run: ./gradlew bootjar
 
             - name: Build with Gradle
-              run: ./gradlew build
+              run: cd /webapp &&./gradlew build
 
             - name: Build Docker Image
               run: docker build -t springboot-webapp:webapp-latest ./webapp
