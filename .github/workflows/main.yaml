@@ -4,6 +4,7 @@ permissions:
   packages: write
 jobs:
     springboot-workflow:
+        name: Build Spring Image and Push to GitHub Container Registry
         runs-on: ubuntu-latest
         steps:
             - name: Checkout Repository
